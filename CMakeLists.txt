@@ -5,26 +5,37 @@ find_package(Catch2 CONFIG REQUIRED)
 
 set(CMAKE_CXX_STANDARD 26)
 
+set(MODULES
+        Arrays-Hashing
+        Two-Pointer
+        Sliding-Window
+        Stack
+        Binary-Search
+        Linked-List
+        Trees
+        Heap
+        Backtracking
+        Tries
+        Graphs
+)
+
+set(SOURCES
+        arrays-hashing.cpp
+        two-pointer.cpp
+        sliding-window.cpp
+        stack.cpp
+        binary-search.cpp
+        linked-list.cpp
+        trees.cpp
+        heap.cpp
+        backtracking.cpp
+        tries.cpp
+        graphs.cpp
+)
+
 add_executable(DSA_Revision main.cpp)
-add_executable(Arrays-Hashing arrays-hashing.cpp)
-add_executable(Two-Pointer two-pointer.cpp)
-add_executable(Sliding-Window sliding-window.cpp)
-add_executable(Stack stack.cpp)
-add_executable(Binary-Search binary-search.cpp)
-add_executable(Linked-List linked-list.cpp)
-add_executable(Trees trees.cpp)
-add_executable(Heap heap.cpp)
-add_executable(Backtracking backtracking.cpp)
-add_executable(Tries tries.cpp)
-add_executable(Graphs graphs.cpp)
-target_link_libraries(Arrays-Hashing PRIVATE Catch2::Catch2WithMain)
-target_link_libraries(Two-Pointer PRIVATE Catch2::Catch2WithMain)
-target_link_libraries(Sliding-Window PRIVATE Catch2::Catch2WithMain)
-target_link_libraries(Stack PRIVATE Catch2::Catch2WithMain)
-target_link_libraries(Binary-Search PRIVATE Catch2::Catch2WithMain)
-target_link_libraries(Linked-List PRIVATE Catch2::Catch2WithMain)
-target_link_libraries(Trees PRIVATE Catch2::Catch2WithMain)
-target_link_libraries(Heap PRIVATE Catch2::Catch2WithMain)
-target_link_libraries(Backtracking PRIVATE Catch2::Catch2WithMain)
-target_link_libraries(Tries PRIVATE Catch2::Catch2WithMain)
-target_link_libraries(Graphs PRIVATE Catch2::Catch2WithMain)
+
+foreach (MODULE SOURCE IN ZIP_LISTS MODULES SOURCES)
+    add_executable(${MODULE} ${SOURCE})
+    target_link_libraries(${MODULE} PRIVATE Catch2::Catch2WithMain)
+endforeach ()
