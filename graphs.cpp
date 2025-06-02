@@ -209,10 +209,133 @@ TEST_CASE("Course Schedule") {
     REQUIRE(canFinish(2, {{1, 0}, {0, 1}}) == false);
 }
 
-class DSU {
-    std::vector<int> parent, size;
-};
-
 bool validTree(const int n, const std::vector<std::vector<int>>& edges) {
+    if (n == 0) return true;
 
+    const auto make_adj_list = [n](const std::vector<std::vector<int>>& edge_list) {
+        std::vector adj_list(n, std::vector<int>{});
+
+        for (const auto& edge : edge_list) {
+            const int u = edge[0], v = edge[1];
+            adj_list[u].push_back(v);
+            adj_list[v].push_back(u);
+        }
+
+        return adj_list;
+    };
+
+    const auto adj_list = make_adj_list(edges);
+    std::vector visited(n, false);
+
+    const std::function<bool(int, int)> dfs = [&](const int node, const int parent) {
+        if (visited[node]) return false;
+
+        visited[node] = true;
+        return std::ranges::all_of(adj_list[node], [&](const int adj_node) {
+            return adj_node == parent or dfs(adj_node, node);
+        });
+    };
+
+    return dfs(0, -1) and std::ranges::all_of(visited, [](const bool v) { return v; });
+}
+
+TEST_CASE("Graph Valid Tree") {
+    REQUIRE(validTree(5, {{0, 1}, {0, 2}, {0, 3}, {1, 4}}) == true);
+    REQUIRE(validTree(5, {{0, 1}, {1, 2}, {2, 3}, {1, 3}, {1, 4}})== false);
+}
+
+int countComponents(const int n, const std::vector<std::vector<int>>& edges) {
+    const auto make_adj_list = [n](const std::vector<std::vector<int>>& edge_list) {
+        std::vector adj_list(n, std::vector<int>{});
+
+        for (const auto& edge : edge_list) {
+            const int u = edge[0], v = edge[1];
+            adj_list[u].push_back(v);
+            adj_list[v].push_back(u);
+        }
+
+        return adj_list;
+    };
+
+    const auto adj_list = make_adj_list(edges);
+    std::vector visited(n, false);
+    int count = 0;
+
+    const std::function<void(int)> dfs = [&](const int node) {
+        visited[node] = true;
+
+        for (const int adj_node : adj_list[node])
+            if (!visited[adj_node]) dfs(adj_node);
+    };
+
+    for (int i = 0; i < n; ++i) {
+        if (!visited[i]) {
+            dfs(i);
+            count++;
+        }
+    }
+
+    return count;
+}
+
+TEST_CASE("Number of Connected Components in an Undirected Graph") {
+    REQUIRE(countComponents(3, {{0, 1}, {0,2}}) == 1);
+    REQUIRE(countComponents(6, {{0, 1}, {1, 2}, {2, 3}, {4, 5}}) == 2);
+}
+
+std::string foreignDictionary(const std::vector<std::string>& words) {
+    const auto make_adj_list = [](const std::vector<std::string>& ordered_words) {
+        std::unordered_map<char, std::unordered_set<char>> adj_list;
+        for (size_t i = 0; i < ordered_words.size() - 1; ++i) {
+            const auto s1 = ordered_words[i], s2 = ordered_words[i + 1];
+
+            for (size_t j = 0; j < std::min(s1.length(), s2.length()); ++j)
+                if (s1[j] != s2[j]) {
+                    adj_list[s1[j]].insert(s2[j]);
+                    break;
+                }
+        }
+
+        for (const auto& word : ordered_words)
+            for (const char ch : word) adj_list.try_emplace(ch);
+
+        return adj_list;
+    };
+    const auto get_indegree = [](const std::unordered_map<char, std::unordered_set<char>>& adj_list) {
+        std::unordered_map<char, int> indegree;
+        for (const auto& [u, neighbours] : adj_list) {
+            indegree.try_emplace(u, 0);
+            for (char v : neighbours) indegree[v]++;
+        }
+
+        return indegree;
+    };
+
+    const auto adj_list = make_adj_list(words);
+    auto indegree = get_indegree(adj_list);
+
+    const auto kahn_algorith = [&](const std::unordered_map<char, std::unordered_set<char>>& adj) {
+        std::queue<char> queue;
+        for (const auto& [c, deg] : indegree) if (deg == 0) queue.push(c);
+
+        std::string order;
+        while (!queue.empty()) {
+            const char u = queue.front();
+            queue.pop();
+            order += u;
+
+            for (const char v : adj_list.at(u))
+                if (--indegree[v] == 0) queue.push(v);
+        }
+
+        return order;
+    };
+
+    // We can check if the dictionary is valid and complete by checking order.size == adj_list.size
+    return kahn_algorith(adj_list);
+}
+
+TEST_CASE("Alien Dictionary") {
+    REQUIRE(foreignDictionary({"z", "o"}) == "zo");
+    REQUIRE(foreignDictionary({"hrn","hrf","er","enn","rfnn"}) == "hernf");
 }

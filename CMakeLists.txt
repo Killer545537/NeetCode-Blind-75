@@ -17,6 +17,7 @@ set(MODULES
         Backtracking
         Tries
         Graphs
+        DP
 )
 
 set(SOURCES
@@ -31,6 +32,7 @@ set(SOURCES
         backtracking.cpp
         tries.cpp
         graphs.cpp
+        dp.cpp
 )
 
 add_executable(DSA_Revision main.cpp)
