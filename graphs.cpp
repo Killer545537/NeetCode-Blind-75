@@ -287,7 +287,7 @@ std::string foreignDictionary(const std::vector<std::string>& words) {
     const auto make_adj_list = [](const std::vector<std::string>& ordered_words) {
         std::unordered_map<char, std::unordered_set<char>> adj_list;
         for (size_t i = 0; i < ordered_words.size() - 1; ++i) {
-            const auto s1 = ordered_words[i], s2 = ordered_words[i + 1];
+            const auto &s1 = ordered_words[i], &s2 = ordered_words[i + 1];
 
             for (size_t j = 0; j < std::min(s1.length(), s2.length()); ++j)
                 if (s1[j] != s2[j]) {
