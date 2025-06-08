@@ -18,6 +18,7 @@ set(MODULES
         Tries
         Graphs
         DP
+        Greedy
 )
 
 set(SOURCES
@@ -33,6 +34,7 @@ set(SOURCES
         tries.cpp
         graphs.cpp
         dp.cpp
+        greedy.cpp
 )
 
 add_executable(DSA_Revision main.cpp)
