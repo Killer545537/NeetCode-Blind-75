@@ -199,3 +199,59 @@ TEST_CASE("Word Break") {
     REQUIRE(wordBreak("applepenapple", {"apple","pen"}) == true);
     REQUIRE(wordBreak("catsandog", {"cats","dog","sand","and","cat"}) == false);
 }
+
+int lengthOfLIS(const std::vector<int>& nums) {
+    std::vector<int> temp;
+    temp.reserve(nums.size());
+
+    for (const int num : nums) {
+        if (const auto it = std::ranges::lower_bound(temp, num); it == temp.end()) temp.push_back(num);
+        else *it = num;
+    }
+
+    return static_cast<int>(temp.size());
+}
+
+TEST_CASE("Longest Increasing Subsequence") {
+    REQUIRE(lengthOfLIS({10,9,2,5,3,7,101,18}) == 4);
+    REQUIRE(lengthOfLIS({0,1,0,3,2,3}) == 4);
+    REQUIRE(lengthOfLIS({7,7,7,7,7,7,7}) == 1);
+}
+
+int uniquePaths(const int m, const int n) {
+    std::vector prev(n, 1);
+
+    for (int i = 1; i < m; ++i) {
+        std::vector curr(n, 1);
+        for (int j = 1; j < n; ++j) curr[j] = prev[j] + curr[j - 1];
+
+        prev = curr;
+    }
+
+    return prev[n - 1];
+}
+
+TEST_CASE("Unique Paths") {
+    REQUIRE(uniquePaths(3, 7) == 28);
+    REQUIRE(uniquePaths(3, 2) == 3);
+}
+
+int longestCommonSubsequence(const std::string& text1, const std::string& text2) {
+    std::vector prev(text2.size() + 1, 0), curr(text2.size() + 1, 0);
+
+    for (int i = 1; i <= text1.size(); ++i) {
+        for (int j = 1; j <= text2.size(); ++j) {
+            if (text1[i - 1] == text2[j - 1]) curr[j] = 1 + prev[j - 1];
+            else curr[j] = std::max(prev[j], curr[j - 1]);
+        }
+        prev = curr;
+    }
+
+    return prev[text2.size()];
+}
+
+TEST_CASE("Longest Common Subsequence") {
+    REQUIRE(longestCommonSubsequence("abcde", "ace") == 3);
+    REQUIRE(longestCommonSubsequence("abc", "abc") == 3);
+    REQUIRE(longestCommonSubsequence("abc", "def") == 0);
+}
