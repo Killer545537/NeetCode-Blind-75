@@ -2,6 +2,7 @@ cmake_minimum_required(VERSION 3.31)
 project(DSA_Revision)
 
 find_package(Catch2 CONFIG REQUIRED)
+find_package(range-v3 CONFIG REQUIRED)
 
 set(CMAKE_CXX_STANDARD 26)
 
@@ -43,3 +44,5 @@ foreach (MODULE SOURCE IN ZIP_LISTS MODULES SOURCES)
     add_executable(${MODULE} ${SOURCE})
     target_link_libraries(${MODULE} PRIVATE Catch2::Catch2WithMain)
 endforeach ()
+
+target_link_libraries(DSA_Revision PRIVATE range-v3::range-v3)
