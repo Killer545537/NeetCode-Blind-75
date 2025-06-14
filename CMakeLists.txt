@@ -21,6 +21,7 @@ set(MODULES
         DP
         Greedy
         Intervals
+        Geometry
 )
 
 set(SOURCES
@@ -38,6 +39,7 @@ set(SOURCES
         dp.cpp
         greedy.cpp
         intervals.cpp
+        geometry.cpp
 )
 
 add_executable(DSA_Revision main.cpp)
