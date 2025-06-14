@@ -22,6 +22,7 @@ set(MODULES
         Greedy
         Intervals
         Geometry
+        Bit-Manipulation
 )
 
 set(SOURCES
@@ -40,6 +41,7 @@ set(SOURCES
         greedy.cpp
         intervals.cpp
         geometry.cpp
+        bit-manipulation.cpp
 )
 
 add_executable(DSA_Revision main.cpp)
