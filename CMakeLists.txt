@@ -20,6 +20,7 @@ set(MODULES
         Graphs
         DP
         Greedy
+        Intervals
 )
 
 set(SOURCES
@@ -36,6 +37,7 @@ set(SOURCES
         graphs.cpp
         dp.cpp
         greedy.cpp
+        intervals.cpp
 )
 
 add_executable(DSA_Revision main.cpp)
@@ -44,5 +46,3 @@ foreach (MODULE SOURCE IN ZIP_LISTS MODULES SOURCES)
     add_executable(${MODULE} ${SOURCE})
     target_link_libraries(${MODULE} PRIVATE Catch2::Catch2WithMain)
 endforeach ()
-
-target_link_libraries(DSA_Revision PRIVATE range-v3::range-v3)
